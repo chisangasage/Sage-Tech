@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cookery/web"
+	"Sage_Tech/web"
 	"net/http"
 
 	"github.com/gorilla/mux"
