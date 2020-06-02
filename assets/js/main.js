@@ -1,136 +1,101 @@
-jQuery(document).ready(function( $ ) {
+jQuery(document).ready(function($) {
 
-  $(window).scroll(function () {
-    var height = $(window).height();
-    var scroll = $(window).scrollTop();
-    if (scroll) {
-      $(".header-hide").addClass("scroll-header");
-    } else {
-      $(".header-hide").removeClass("scroll-header");
-    }
+	'use strict';
 
-  });
+      var owl = $("#owl-testimonials");
 
-  // Back to top button
-  $(window).scroll(function() {
-    if ($(this).scrollTop() > 100) {
-      $('.back-to-top').fadeIn('slow');
-    } else {
-      $('.back-to-top').fadeOut('slow');
-    }
-  });
-  $('.back-to-top').click(function(){
-    $('html, body').animate({scrollTop : 0},1500, 'easeInOutExpo');
-    return false;
-  });
+        owl.owlCarousel({
+          
+          pagination : true,
+          paginationNumbers: false,
+          autoPlay: 6000, //Set AutoPlay to 3 seconds
+          items : 1, //10 items above 1000px browser width
+          itemsDesktop : [1000,1], //5 items between 1000px and 901px
+          itemsDesktopSmall : [900,1], // betweem 900px and 601px
+          itemsTablet: [600,1], //2 items between 600 and 0
+          itemsMobile : false // itemsMobile disabled - inherit from itemsTablet option
+          
+      });
 
-  // Initiate the wowjs animation library
-  new WOW().init();
 
-  // Initiate superfish on nav menu
-  $('.nav-menu').superfish({
-    animation: {
-      opacity: 'show'
-    },
-    speed: 400
-  });
+        var top_header = $('.parallax-content');
+        top_header.css({'background-position':'center center'}); // better use CSS
 
-  // Mobile Navigation
-  if ($('#nav-menu-container').length) {
-    var $mobile_nav = $('#nav-menu-container').clone().prop({
-      id: 'mobile-nav'
-    });
-    $mobile_nav.find('> ul').attr({
-      'class': '',
-      'id': ''
-    });
-    $('body').append($mobile_nav);
-    $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
-    $('body').append('<div id="mobile-body-overly"></div>');
-    $('#mobile-nav').find('.menu-has-children').prepend('<i class="fa fa-chevron-down"></i>');
+        $(window).scroll(function () {
+        var st = $(this).scrollTop();
+        top_header.css({'background-position':'center calc(50% + '+(st*.5)+'px)'});
+        });
 
-    $(document).on('click', '.menu-has-children i', function(e) {
-      $(this).next().toggleClass('menu-item-active');
-      $(this).nextAll('ul').eq(0).slideToggle();
-      $(this).toggleClass("fa-chevron-up fa-chevron-down");
-    });
 
-    $(document).on('click', '#mobile-nav-toggle', function(e) {
-      $('body').toggleClass('mobile-nav-active');
-      $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
-      $('#mobile-body-overly').toggle();
-    });
+        $('.counter').each(function() {
+          var $this = $(this),
+              countTo = $this.attr('data-count');
+          
+          $({ countNum: $this.text()}).animate({
+            countNum: countTo
+          },
 
-    $(document).click(function(e) {
-      var container = $("#mobile-nav, #mobile-nav-toggle");
-      if (!container.is(e.target) && container.has(e.target).length === 0) {
-        if ($('body').hasClass('mobile-nav-active')) {
-          $('body').removeClass('mobile-nav-active');
-          $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
-          $('#mobile-body-overly').fadeOut();
-        }
-      }
-    });
-  } else if ($("#mobile-nav, #mobile-nav-toggle").length) {
-    $("#mobile-nav, #mobile-nav-toggle").hide();
-  }
+          {
 
-  // Smooth scroll for the menu and links with .scrollto classes
-  $('.nav-menu a, #mobile-nav a, .scrollto').on('click', function() {
-    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-      var target = $(this.hash);
-      if (target.length) {
-        var top_space = 0;
+            duration: 8000,
+            easing:'linear',
+            step: function() {
+              $this.text(Math.floor(this.countNum));
+            },
+            complete: function() {
+              $this.text(this.countNum);
+              //alert('finished');
+            }
 
-        if ($('#header').length) {
-          top_space = $('#header').outerHeight();
+          });  
+          
+        });
 
-          if( ! $('#header').hasClass('header-fixed') ) {
-            top_space = top_space - 20;
-          }
-        }
 
-        $('html, body').animate({
-          scrollTop: target.offset().top - top_space
-        }, 1500, 'easeInOutExpo');
+        $('.tabgroup > div').hide();
+        $('.tabgroup > div:first-of-type').show();
+        $('.tabs a').click(function(e){
+          e.preventDefault();
+            var $this = $(this),
+            tabgroup = '#'+$this.parents('.tabs').data('tabgroup'),
+            others = $this.closest('li').siblings().children('a'),
+            target = $this.attr('href');
+        others.removeClass('active');
+        $this.addClass('active');
+        $(tabgroup).children('div').hide();
+        $(target).show();
+      
+        })
 
-        if ($(this).parents('.nav-menu').length) {
-          $('.nav-menu .menu-active').removeClass('menu-active');
-          $(this).closest('li').addClass('menu-active');
-        }
 
-        if ($('body').hasClass('mobile-nav-active')) {
-          $('body').removeClass('mobile-nav-active');
-          $('#mobile-nav-toggle i').toggleClass('fa-times fa-bars');
-          $('#mobile-body-overly').fadeOut();
-        }
-        return false;
-      }
-    }
-  });
 
-  // Modal video
-  new ModalVideo('.js-modal-btn', {channel: 'youtube'});
+        $(".pop-button").click(function () {
+            $(".pop").fadeIn(300);
+            
+        });
 
-  // Init Owl Carousel
-  $('.owl-carousel').owlCarousel({
-    items: 4,
-    autoplay: true,
-    loop: true,
-    margin: 30,
-    dots: true,
-    responsiveClass: true,
-    responsive: {
+        $(".pop > span").click(function () {
+            $(".pop").fadeOut(300);
+        });
 
-      320: { items: 1},
-      480: { items: 2},
-      600: { items: 2},
-      767: { items: 3},
-      768: { items: 3},
-      992: { items: 4}
-    }
-  });
 
-// custom code
+        $(window).on("scroll", function() {
+            if($(window).scrollTop() > 100) {
+                $(".header").addClass("active");
+            } else {
+                //remove the background property so it comes transparent again (defined in your css)
+               $(".header").removeClass("active");
+            }
+        });
+
+
+	/************** Mixitup (Filter Projects) *********************/
+    	$('.projects-holder').mixitup({
+            effects: ['fade','grayscale'],
+            easing: 'snap',
+            transitionSpeed: 400
+        });
+
+
 
 });
