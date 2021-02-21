@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Sage_Tech/web"
+	"Sage-Tech/web"
 	"net/http"
 
 	"github.com/gorilla/mux"
